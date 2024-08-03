@@ -3,12 +3,13 @@ import { useContext, useState, createContext, memo } from "react";
 const DarkModeContext = createContext({});
 
 function Button({ children, ...rest }) {
-  const { isDarkMode } = useContext(DarkModeContext);
+  const { isDarkMode } = useDarkMode();
   const style = {
     backgroundColor: isDarkMode ? "#333" : "#CCC",
     border: "1px solid",
     color: "inherit",
   };
+  
   return (
     <button style={style} {...rest}>
       {children}
@@ -17,7 +18,7 @@ function Button({ children, ...rest }) {
 }
 
 function ToggleButton() {
-  const { toggleDarkMode } = useContext(DarkModeContext);
+  const { toggleDarkMode } = useDarkMode();
 
   return <Button onClick={toggleDarkMode}>Toggle mode</Button>;
 }
@@ -31,6 +32,7 @@ const Header = memo(function Header() {
     gap: "5px",
     justifyContent: "flex-end",
   };
+
   return (
     <header style={style}>
       <Button>Products</Button>
@@ -42,7 +44,7 @@ const Header = memo(function Header() {
 });
 
 const Main = memo(function Main() {
-  const { isDarkMode } = useContext(DarkModeContext);
+  const { isDarkMode } = useDarkMode();
   const style = {
     color: isDarkMode ? "white" : "black",
     backgroundColor: isDarkMode ? "black" : "white",
@@ -50,6 +52,7 @@ const Main = memo(function Main() {
     minHeight: "100vh",
     boxSizing: "border-box",
   };
+
   return (
     <main style={style}>
       <Header />
@@ -58,13 +61,26 @@ const Main = memo(function Main() {
   );
 });
 
-export default function App() {
+function DarkModeProvider({children}) {
   const [isDarkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => setDarkMode((v) => !v);
   const contextValue = { isDarkMode, toggleDarkMode };
-  return (
+
+  return(
     <DarkModeContext.Provider value={contextValue}>
-      <Main />
+      {children}
     </DarkModeContext.Provider>
+  )
+}
+
+function useDarkMode() {
+  return useContext(DarkModeContext);
+}
+
+export default function App() {
+  return (
+    <DarkModeProvider>
+      <Main />
+    </DarkModeProvider>
   );
 }
