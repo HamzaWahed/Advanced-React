@@ -1,5 +1,5 @@
 {
-  "name": "@reactindepth/ch02-dark-mode",
+  "name": "provider",
   "private": true,
   "version": "0.0.0",
   "type": "module",
