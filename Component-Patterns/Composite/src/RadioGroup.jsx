@@ -18,16 +18,23 @@ export function RadioGroup({ name, options, onChange }) {
         alignItems: "flex-start",
       }}
     >
-      {options.map((option) => (
-        <label key={option}>
+      {options.map((option, index) => (
+        <label
+          key={index}
+          style={option.isPopular ? { border: "1px dashed red" } : null}
+        >
+          {option.icon && <span>{option.icon} </span>}
           <input
             type="radio"
             name={name}
-            value={option}
-            checked={selectedValue === option}
+            value={option.value}
+            checked={selectedValue === option.value}
             onChange={handleChange}
           />
-          {option}
+          {option.label}
+          {option.postfix && <em> {option.postfix}</em>}
+          {selectedValue === option.value && option.details}
+          {option.isPopular ? <strong>🔥 Popular!</strong> : null}
         </label>
       ))}
     </div>
